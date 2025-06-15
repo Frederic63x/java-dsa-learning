@@ -23,6 +23,7 @@ public class DoubleLinkedList<T> /* implements LinkedListInterface<T> */{
             head = newNode;
         }
 
+        // if this is the first Node added
         if (size == 0) {
             tail = head;
         }
@@ -60,47 +61,47 @@ public class DoubleLinkedList<T> /* implements LinkedListInterface<T> */{
             addInHead(newNode);
         } else if (index == size) {
             addInTail(newNode);
-        } else {
-            Node<T> trav1;
-            Node<T> trav2;
-            int trav2Index;
+        }
 
-            if (index <= size / 2) {
-                trav1 = head;
-                trav2 = trav1.next;
-                trav2Index = 1;
+        Node<T> trav1;
+        Node<T> trav2;
+        int trav2Index;
 
-                while (trav2Index != index) {
-                    trav1 = trav1.next;
-                    trav2 = trav2.next;
-                    trav2Index++;
-                }
+        if (index <= size / 2) {
+            trav1 = head;
+            trav2 = trav1.next;
+            trav2Index = 1;
 
-                newNode.next = trav2;
-                trav2.previous = newNode;
-
-                newNode.previous = trav1;
-                trav1.next = newNode;
-            } else {
-                trav1 = tail;
-                trav2 = trav1.previous;
-                trav2Index = size - 1;
-
-                while (trav2Index != index) {
-                    trav1 = trav1.previous;
-                    trav2 = trav2.previous;
-                    trav2Index--;
-                }
-
-                newNode.previous = trav2;
-                trav2.next = newNode;
-
-                newNode.next = trav1;
-                trav1.previous = newNode;
+            while (trav2Index != index) {
+                trav1 = trav1.next;
+                trav2 = trav2.next;
+                trav2Index++;
             }
 
-            size++;
+            newNode.next = trav2;
+            trav2.previous = newNode;
+
+            newNode.previous = trav1;
+            trav1.next = newNode;
+        } else {
+            trav1 = tail;
+            trav2 = trav1.previous;
+            trav2Index = size - 1;
+
+            while (trav2Index != index) {
+                trav1 = trav1.previous;
+                trav2 = trav2.previous;
+                trav2Index--;
+            }
+
+            newNode.previous = trav2;
+            trav2.next = newNode;
+
+            newNode.next = trav1;
+            trav1.previous = newNode;
         }
+
+        size++;
     }
 
     public Node<T> removeHead() {
@@ -112,15 +113,9 @@ public class DoubleLinkedList<T> /* implements LinkedListInterface<T> */{
 
         Node<T> temp = head;
         head = head.next;
-
-        if (head != null) {
-            head.previous = null;
-        }
+        head.previous = null; // otherwise the old head would be pinted by the new head.previous (so not garbage collected)
 
         size--;
-        if (size == 0) {
-            tail = null;
-        }
 
         return temp;
     }
@@ -134,17 +129,121 @@ public class DoubleLinkedList<T> /* implements LinkedListInterface<T> */{
 
         Node<T> temp = tail;
         tail = tail.previous;
-
-        if (tail != null) {
-            tail.next = null;
-        }
+        tail.next = null; // same as the head, the old tail would be pointed by the new tail.next
 
         size--;
-        if (size == 0) {
-            head = null;
-        }
 
         return temp;
+    }
+
+    public Node<T> removeAtIndex(int index) {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException(
+                "The list is empty, nothing to remove"
+            );
+        } else if (index == size) {
+            // can't remove a node at the index == size cause it won't already be on thel list (with add we can cause this is what AddInTail() do)
+            throw new IndexOutOfBoundsException(
+                "index: " + index + "size: " + size
+            );
+        }
+
+        if (index == 0) removeHead();
+        else if (index == size - 1) removeTail();
+
+        Node<T> trav1;
+        Node<T> trav2;
+        int trav2Index;
+
+        if (index <= (size - 1) / 2) {
+            trav1 = head;
+            trav2 = trav1.next;
+            trav2Index = 1;
+
+            while (trav2Index != index) {
+                trav1 = trav1.next;
+                trav2 = trav2.next;
+                trav2Index++;
+            }
+
+            Node<T> temp = trav2;
+            trav2 = trav2.next;
+            trav1.next = trav2;
+            trav2.previous = trav1;
+            size--;
+            return temp;
+        } else {
+            trav1 = tail;
+            trav2 = tail.previous;
+            trav2Index = size - 1;
+
+            while (trav2Index != index) {
+                trav1 = trav1.previous;
+                trav2 = trav2.previous;
+                trav2Index--;
+            }
+
+            Node<T> temp = trav2;
+            trav2 = trav2.previous;
+            trav1.previous = trav2;
+            trav2.next = trav1;
+            size--;
+            return temp;
+        }
+    }
+
+    public Node<T> getHead() {
+        if (isEmpty()) {
+            throw new Error("the list is empty, cannot get the head");
+        }
+
+        return head;
+    }
+
+    public Node<T> getTail() {
+        if (isEmpty()) {
+            throw new Error("the list is empty, cannot get the tail");
+        }
+
+        return tail;
+    }
+
+    public Node<T> getAtIndex(int index) {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException(
+                "the list is empty, cannot get any Node"
+            );
+        } else if (index == 0) {
+            getHead();
+        } else if (index == size - 1) {
+            getTail();
+        }
+
+        Node<T> trav;
+        int travIndex;
+
+        // do the math, it's right, like for size 4 (0,1,2,3) and index = 2; this is 2 <= 3/2 => 2 <= 1.5 => (rounded to the floor by default) 2 <= 1 (false so the other {right cause is nearer to tail than head})
+        if (index <= (size - 1) / 2) {
+            trav = head;
+            travIndex = 0;
+
+            while (travIndex != index) {
+                trav = trav.next;
+                travIndex++;
+            }
+
+            return trav;
+        } else {
+            trav = tail;
+            travIndex = size - 1;
+
+            while (travIndex != index) {
+                trav = trav.previous;
+                travIndex--;
+            }
+
+            return trav;
+        }
     }
 
     public void printList() {

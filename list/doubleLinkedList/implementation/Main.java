@@ -1,10 +1,7 @@
-import java.util.LinkedList;
-import javax.print.Doc;
-
 public class Main {
 
     public static void main(String[] args) {
-        // LinkedList<Integer> l1 = new LinkedList<Integer>();
+        System.out.println(1 > 1 / 2);
         System.out.println("start");
 
         DoubleLinkedList<Integer> l1 = new DoubleLinkedList<Integer>();
@@ -21,6 +18,26 @@ public class Main {
         l1.addInTail(n3);
         System.out.println("head: " + l1.head + " tail: " + l1.tail);
         l1.addAtIndex(2, n4);
+        System.out.println("head: " + l1.head + " tail: " + l1.tail);
+        l1.printList();
+        System.out.println(
+            " head: " +
+            l1.getHead() +
+            " tail: " +
+            l1.getTail() +
+            " index1: " +
+            l1.getAtIndex(1) +
+            " index2: " +
+            l1.getAtIndex(2)
+        );
+
+        l1.removeHead();
+        System.out.println("head: " + l1.head + " tail: " + l1.tail);
+        l1.printList();
+        l1.removeAtIndex(1);
+        System.out.println("head: " + l1.head + " tail: " + l1.tail);
+        l1.printList();
+        l1.removeTail();
         System.out.println("head: " + l1.head + " tail: " + l1.tail);
 
         l1.printList();
