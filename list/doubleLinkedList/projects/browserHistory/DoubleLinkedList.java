@@ -65,47 +65,47 @@ public class DoubleLinkedList<T> implements LinkedListInterface<T> {
             addInHead(newNode);
         } else if (index == size) {
             addInTail(newNode);
-        }
-
-        Node<T> trav1;
-        Node<T> trav2;
-        int trav2Index;
-
-        if (index <= size / 2) {
-            trav1 = head;
-            trav2 = trav1.next;
-            trav2Index = 1;
-
-            while (trav2Index != index) {
-                trav1 = trav1.next;
-                trav2 = trav2.next;
-                trav2Index++;
-            }
-
-            newNode.next = trav2;
-            trav2.previous = newNode;
-
-            newNode.previous = trav1;
-            trav1.next = newNode;
         } else {
-            trav1 = tail;
-            trav2 = trav1.previous;
-            trav2Index = size - 1;
+            Node<T> trav1;
+            Node<T> trav2;
+            int trav2Index;
 
-            while (trav2Index != index) {
-                trav1 = trav1.previous;
-                trav2 = trav2.previous;
-                trav2Index--;
+            if (index <= size / 2) {
+                trav1 = head;
+                trav2 = trav1.next;
+                trav2Index = 1;
+
+                while (trav2Index != index) {
+                    trav1 = trav1.next;
+                    trav2 = trav2.next;
+                    trav2Index++;
+                }
+
+                newNode.next = trav2;
+                trav2.previous = newNode;
+
+                newNode.previous = trav1;
+                trav1.next = newNode;
+            } else {
+                trav1 = tail;
+                trav2 = trav1.previous;
+                trav2Index = size - 1;
+
+                while (trav2Index != index) {
+                    trav1 = trav1.previous;
+                    trav2 = trav2.previous;
+                    trav2Index--;
+                }
+
+                newNode.previous = trav2;
+                trav2.next = newNode;
+
+                newNode.next = trav1;
+                trav1.previous = newNode;
             }
 
-            newNode.previous = trav2;
-            trav2.next = newNode;
-
-            newNode.next = trav1;
-            trav1.previous = newNode;
+            size++;
         }
-
-        size++;
     }
 
     public Node<T> removeHead() {
