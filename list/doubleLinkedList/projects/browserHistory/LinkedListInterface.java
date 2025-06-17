@@ -32,6 +32,9 @@ public interface LinkedListInterface<T> {
 
     public Node<T> getAtIndex(int index);
 
+    // get index of this node by value
+    // public int getIndexOf(Node<T> value); // but how do i use this for the url? cause value is {name: string, url: string} so how to use just url? idk
+
     // print the list method.
     public void printList();
 }

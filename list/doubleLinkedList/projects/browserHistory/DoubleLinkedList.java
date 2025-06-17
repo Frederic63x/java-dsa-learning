@@ -28,7 +28,7 @@ public class DoubleLinkedList<T> implements LinkedListInterface<T> {
         }
 
         // if this is the first Node added
-        if (size == 0) {
+        if (isEmpty()) {
             tail = head;
         }
 
@@ -36,17 +36,23 @@ public class DoubleLinkedList<T> implements LinkedListInterface<T> {
     }
 
     public void addInTail(Node<T> newNode) {
-        if (head == null) {
+        if (isEmpty()) {
             addInHead(newNode);
         } else {
-            Node<T> trav = head;
-            while (trav.next != null) {
-                trav = trav.next;
-            }
-
-            trav.next = newNode;
-            newNode.previous = trav;
+            // if doesn't exist i can use this
+            tail.next = newNode;
+            newNode.previous = tail;
+            tail = newNode;
             size++;
+            // this below is just unefficient, cause if head isn't null then, cause addInHead also make in this case tail=head, tail exist and i can use it to reduce the timeComplexity
+            // Node<T> trav = head;
+            // while (trav.next != null) {
+            //     trav = trav.next;
+            // }
+
+            // trav.next = newNode;
+            // newNode.previous = trav;
+            // size++;
         }
 
         tail = newNode;
